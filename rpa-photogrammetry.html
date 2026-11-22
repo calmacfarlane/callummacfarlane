@@ -1,0 +1,339 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RPA Photogrammetry | Callum Macfarlane</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: #202527;
+      color: #f5f5f5;
+      font-family: Arial, sans-serif;
+      line-height: 1.7;
+    }
+
+    header {
+      padding: 18px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .site-name {
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: #d0d5d5;
+    }
+
+    nav {
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    a { color: #a4c9bf; }
+
+    nav a, .site-name a {
+      color: white;
+      text-decoration: none;
+    }
+
+    nav a:hover { color: #a4c9bf; }
+
+    main {
+      max-width: 1050px;
+      margin: 70px auto;
+      padding: 0 24px;
+    }
+
+    .content {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    h1, h2 { font-weight: normal; }
+
+    h1 {
+      font-size: 32px;
+      line-height: 1.3;
+    }
+
+    h2 { margin-top: 45px; }
+
+    .category {
+      color: #a4c9bf;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin: 30px 0;
+    }
+
+    .result-card {
+      background: #2c3436;
+      padding: 24px;
+      border-radius: 5px;
+    }
+
+    .result-label {
+      color: #cad4d2;
+      font-size: 13px;
+    }
+
+    .result-value {
+      display: block;
+      font-size: 32px;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
+    .map {
+      margin: 35px auto;
+      text-align: center;
+    }
+
+    .map img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 3px;
+    }
+
+    .map img:hover { opacity: 0.95; }
+
+    figcaption {
+      color: #c3cccc;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    .details {
+      border-top: 1px solid #465052;
+      margin-top: 40px;
+      padding-top: 20px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 35px;
+      color: #aeb9b9;
+      font-size: 13px;
+    }
+
+    @media (max-width: 650px) {
+      header {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      nav { gap: 20px; }
+
+      main { margin: 40px auto; }
+
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div>
+      <div class="site-name">
+        <a href="index.html">Callum Macfarlane</a>
+      </div>
+      <div class="subtitle">
+        GIS | Remote Sensing | RPA Mapping
+      </div>
+    </div>
+
+    <nav>
+      <a href="about.html">About Me</a>
+      <a href="index.html">Portfolio</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <div class="content">
+
+      <p class="category">
+        RPA Photogrammetry | Spatial Accuracy
+      </p>
+
+      <h1>
+        Assessing Positional Accuracy in
+        RPA Photogrammetry
+      </h1>
+
+      <p>
+        <strong>University of Tasmania | 2026</strong>
+      </p>
+
+      <p>
+        This project investigated the positional accuracy
+        of photogrammetric mapping produced using conventional
+        GPS and Real-Time Kinematic (RTK) positioning.
+      </p>
+
+      <p>
+        Using RPA-derived orthomosaics and digital elevation
+        models, I compared the horizontal and vertical
+        accuracy of both approaches against 18 independently
+        surveyed checkpoints.
+      </p>
+
+      <p>
+        The analysis examined how different positioning
+        methods affected the accuracy of photogrammetric
+        mapping products, and how positional errors could
+        be communicated through cartographic visualisation.
+      </p>
+
+      <h2>Key Results</h2>
+
+      <div class="results-grid">
+
+        <div class="result-card">
+          <span class="result-label">
+            Conventional GPS | 3D RMSE
+          </span>
+          <span class="result-value">0.610 m</span>
+        </div>
+
+        <div class="result-card">
+          <span class="result-label">
+            RTK | 3D RMSE
+          </span>
+          <span class="result-value">0.096 m</span>
+        </div>
+
+      </div>
+
+      <p>
+        The RTK-based dataset demonstrated an approximately
+        <strong>84% reduction in total 3D RMSE</strong>
+        compared with the conventional GPS dataset.
+      </p>
+
+    </div>
+
+    <figure class="map">
+      <a href="rpa-accuracy.png" target="_blank"
+         rel="noopener noreferrer">
+        <img
+          src="rpa-accuracy.png"
+          alt="Comparison of GPS and RTK positional accuracy
+          across 18 surveyed checkpoints at UTAS"
+          loading="lazy">
+      </a>
+      <figcaption>
+        RPA positional accuracy map comparing horizontal
+        displacement and vertical error. Click to enlarge.
+      </figcaption>
+    </figure>
+
+    <div class="content">
+
+      <h2>Methodology</h2>
+
+      <p>
+        Two photogrammetric datasets were assessed:
+        one using conventional GPS positioning and
+        another using RTK positioning.
+      </p>
+
+      <p>
+        Positional errors were evaluated using 18
+        surveyed checkpoints distributed across
+        the study area. Differences between mapped
+        and surveyed positions were used to assess
+        horizontal and vertical accuracy.
+      </p>
+
+      <p>
+        To visualise horizontal error, displacement
+        vectors were exaggerated by a factor of 50,
+        allowing otherwise small positional differences
+        to be clearly displayed at the map scale.
+      </p>
+
+      <p>
+        Vertical errors were represented using graduated
+        circles, with separate colours for GPS and RTK.
+        This allowed differences in error magnitude
+        and distribution to be compared spatially.
+      </p>
+
+      <h2>Discussion</h2>
+
+      <p>
+        The results demonstrate the substantial
+        improvement in positional accuracy achievable
+        through RTK positioning.
+      </p>
+
+      <p>
+        The project also highlights the importance
+        of independent checkpoint validation and
+        clear cartographic communication of spatial
+        uncertainty in RPA-derived mapping products.
+      </p>
+
+      <div class="details">
+
+        <p>
+          <strong>Techniques:</strong>
+          RPA photogrammetry, GNSS positioning,
+          RTK, checkpoint validation, RMSE analysis
+          and positional error visualisation.
+        </p>
+
+        <p>
+          <strong>Software:</strong>
+          QGIS, Agisoft photogrammetric processing.
+        </p>
+
+        <p>
+          <strong>Project context:</strong>
+          Academic project completed as part of
+          postgraduate GIS studies at the
+          University of Tasmania, 2026.
+        </p>
+
+        <p>
+          <a href="index.html">← Back to Portfolio</a>
+        </p>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    © 2026 Callum Macfarlane
+  </footer>
+
+</body>
+</html>
