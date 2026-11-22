@@ -1,4 +1,300 @@
-  <p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Philosopher's Tale | Callum Macfarlane</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #202527;
+      color: #f5f5f5;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    header {
+      padding: 18px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .site-name {
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: #d0d5d5;
+    }
+
+    nav {
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    nav a, .site-name a {
+      color: white;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      color: #a4c9bf;
+    }
+
+    a { color: #a4c9bf; }
+
+    main {
+      max-width: 1000px;
+      margin: 70px auto;
+      padding: 0 24px;
+    }
+
+    .intro, .results, .details {
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    h1, h2 { font-weight: normal; }
+
+    h1 {
+      font-size: 32px;
+      line-height: 1.3;
+    }
+
+    h2 { margin-top: 45px; }
+
+    .category {
+      color: #a4c9bf;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .map-gallery {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      margin: 35px 0;
+    }
+
+    figure { margin: 0; }
+
+    figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 3px;
+    }
+
+    figure a img:hover {
+      opacity: 0.9;
+    }
+
+    figcaption {
+      color: #c3cccc;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    .details {
+      border-top: 1px solid #465052;
+      margin-top: 40px;
+      padding-top: 20px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 35px;
+      color: #aeb9b9;
+      font-size: 13px;
+    }
+
+    @media (max-width: 650px) {
+      header {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      nav { gap: 20px; }
+
+      main { margin: 40px auto; }
+
+      .map-gallery {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div>
+      <div class="site-name">
+        <a href="index.html">Callum Macfarlane</a>
+      </div>
+      <div class="subtitle">
+        GIS | Remote Sensing | RPA Mapping
+      </div>
+    </div>
+
+    <nav>
+      <a href="about.html">About Me</a>
+      <a href="index.html">Portfolio</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <div class="intro">
+
+      <p class="category">
+        Spatial Analysis | Environmental Planning
+      </p>
+
+      <h1>
+        Multi-Criteria Hut Site Suitability Analysis
+      </h1>
+
+      <p>
+        <strong>
+          Philosopher's Tale Track, Tasmania | 2026
+        </strong>
+      </p>
+
+      <p>
+        This project investigated potential locations
+        for a new wilderness hut along the Philosopher's
+        Tale Track in Tasmania, considering competing
+        priorities of accessibility, construction costs
+        and landscape characteristics.
+      </p>
+
+      <p>
+        Using GIS-based suitability analysis, I evaluated
+        potential hut locations against environmental
+        and infrastructure constraints, including terrain,
+        proximity to existing tracks and roads, water
+        features and threatened vegetation.
+      </p>
+
+      <p>
+        Two different perspectives were explored:
+        an access-focused approach prioritising
+        convenient locations, and a cost-focused approach
+        considering the practical implications of site
+        selection.
+      </p>
+
+      <p>
+        Additional viewshed analysis was used to
+        investigate landscape visibility from selected
+        potential hut sites.
+      </p>
+
+    </div>
+
+    <div class="intro">
+      <h2>Project Maps</h2>
+      <p>
+        Click either map to view it at full resolution.
+      </p>
+    </div>
+
+    <div class="map-gallery">
+
+      <figure>
+        <a href="philosophers-access.png" target="_blank">
+          <img
+            src="philosophers-access.png"
+            alt="Access-focused hut site suitability map"
+            loading="lazy">
+        </a>
+        <figcaption>
+          <strong>Access Perspective.</strong>
+          Preferred hut locations prioritising
+          accessibility along the track.
+        </figcaption>
+      </figure>
+
+      <figure>
+        <a href="philosophers-cost.png" target="_blank">
+          <img
+            src="philosophers-cost.png"
+            alt="Cost-focused hut site suitability map"
+            loading="lazy">
+        </a>
+        <figcaption>
+          <strong>Cost Perspective.</strong>
+          Preferred locations based on cost suitability,
+          including viewshed considerations.
+        </figcaption>
+      </figure>
+
+    </div>
+
+    <div class="results">
+
+      <h2>Results & Findings</h2>
+
+      <p>
+        The two suitability approaches identified
+        different preferred hut sites, demonstrating
+        how the weighting of decision-making criteria
+        can influence spatial planning outcomes.
+      </p>
+
+      <p>
+        The access-focused approach identified a preferred
+        site of approximately <strong>7,500 m²</strong>,
+        ranked first for accessibility but 25th for
+        cost suitability.
+      </p>
+
+      <p>
+        In comparison, the cost-focused approach identified
+        a preferred site of approximately
+        <strong>1,025 m²</strong>, ranked first for cost
+        suitability and second for accessibility.
+        This site also had an approximate mapped
+        viewshed area of <strong>24.41 km²</strong>.
+      </p>
+
+      <p>
+        The comparison highlights the importance of
+        considering competing priorities when selecting
+        locations for infrastructure in environmentally
+        sensitive landscapes.
+      </p>
+
+    </div>
+
+    <div class="details">
+
+      <p>
+        <strong>Techniques:</strong>
+        Multi-criteria suitability analysis,
+        spatial overlay, terrain analysis,
+        viewshed modelling and site ranking.
+      </p>
+
+      <p>
+        <strong>Software:</strong> ArcGIS Pro.
+      </p>
+
+      <p>
         <strong>Project context:</strong>
         Academic project completed as part of
         postgraduate GIS studies at the
