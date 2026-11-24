@@ -44,13 +44,17 @@
     .nav .contact-link { border: 1px solid rgba(185,217,178,.5); border-radius: 30px; padding: 9px 17px; color: var(--text); }
     .nav .contact-link:hover { background: var(--accent); color: var(--bg); }
 
-    .hero { position: relative; min-height: min(760px, 89vh); display: grid; align-items: center; isolation: isolate; overflow: hidden; }
-    .hero::before { content: ""; position: absolute; inset: 0; z-index: -1;
-      background: linear-gradient(120deg, rgba(20,35,31,.97) 7%, rgba(20,35,31,.91) 47%, rgba(20,35,31,.25) 100%); }
-    .contours { position: absolute; width: 72%; height: 100%; right: -21%; top: 0; z-index: -2; opacity: .42; transform: rotate(-7deg); pointer-events: none; }
-    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(270px, .85fr); gap: clamp(32px, 6vw, 100px); align-items: center; padding-block: 75px 95px; }
+    /* The Mt Ossa artwork is a real map export. Keep its labels unobstructed on desktop. */
+    .hero { position: relative; min-height: min(760px, 89vh); display: grid; align-items: center;
+      isolation: isolate; overflow: hidden; background: #172320; }
+    .hero::before { content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none;
+      background: url("ossa-background-2560.png") center center / cover no-repeat; }
+    .hero::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+      background: linear-gradient(90deg, rgba(14,25,22,.97) 0%, rgba(14,25,22,.90) 27%, rgba(14,25,22,.69) 45%, rgba(14,25,22,.08) 77%, rgba(14,25,22,.03) 100%); }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 680px); align-items: center;
+      padding-block: 110px 125px; }
     .eyebrow { color: var(--accent); text-transform: uppercase; font-size: 12px; font-weight: 600; letter-spacing: .2em; }
-    .hero h1 { font: 400 clamp(44px, 6.5vw, 86px)/1.08 Georgia, "Times New Roman", serif; letter-spacing: -.047em; margin: 19px 0 28px; text-wrap: balance; }
+    .hero h1 { max-width: 650px; font: 400 clamp(44px, 6.5vw, 86px)/1.08 Georgia, "Times New Roman", serif; letter-spacing: -.047em; margin: 19px 0 28px; text-wrap: balance; }
     .hero h1 em { font-style: italic; color: var(--accent); }
     .hero-lead { max-width: 570px; font-size: clamp(16px, 1.7vw, 19px); color: #d2ddd3; margin: 0 0 34px; }
     .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; }
@@ -59,12 +63,6 @@
     .button:hover { transform: translateY(-3px); background: #d0ebc9; }
     .text-link { color: var(--text); text-decoration: none; font-size: 14px; border-bottom: 1px solid var(--accent); padding-bottom: 5px; transition: color .25s; }
     .text-link:hover { color: var(--accent); }
-    .hero-photo { position: relative; padding: 20px 0 20px 18px; }
-    .hero-photo::before { content: ""; position: absolute; width: 74%; height: 90%; right: -12px; top: 0; border: 1px solid rgba(185,217,178,.37); border-radius: 46% 46% 5px 5px; }
-    .hero-photo img { position: relative; width: 100%; height: clamp(360px, 42vw, 510px); object-fit: cover;
-      border-radius: 47% 47% 5px 5px; filter: saturate(.84) contrast(1.05); }
-    .photo-note { position: absolute; right: -6px; bottom: -8px; background: var(--surface); padding: 10px 15px; font-size: 11px;
-      letter-spacing: .13em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); }
     .scroll-hint { position: absolute; bottom: 26px; left: max(24px, calc((100vw - var(--max))/2)); color: var(--muted); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; }
 
     section { scroll-margin-top: 95px; }
@@ -114,8 +112,8 @@
     @keyframes fade-enter { from { opacity: 0; } }
 
     @media (max-width: 800px) {
-      .hero-grid { grid-template-columns: 1fr; padding-block: 70px 100px; }
-      .hero-photo { max-width: 410px; margin-inline: auto; width: 100%; }
+      .hero-grid { grid-template-columns: minmax(0, 620px); padding-block: 85px 115px; }
+      .hero::after { background: linear-gradient(90deg, rgba(14,25,22,.97) 0%, rgba(14,25,22,.83) 43%, rgba(14,25,22,.22) 100%); }
       .hero { min-height: auto; }
       .project:first-child, .project:nth-child(2) { grid-column: span 6; }
       .project-third .project-info { padding: 22px 20px 22px 0; }
@@ -128,8 +126,11 @@
       .nav a { font-size: 13px; }
       .nav .contact-link { padding: 5px 12px; }
       .hero h1 { font-size: clamp(39px, 11vw, 62px); }
-      .hero-grid { gap: 30px; }
-      .hero-photo img { height: 380px; }
+      .hero-grid { padding-block: 110px 100px; }
+      /* Keep text readable on mobile, where the map will necessarily be cropped. */
+      .hero { min-height: 610px; }
+      .hero::before { background-position: 62% center; opacity: .85; }
+      .hero::after { background: linear-gradient(90deg, rgba(14,25,22,.91), rgba(14,25,22,.72)); }
       .scroll-hint { display: none; }
       .work, .about-preview, .contact { padding-block: 65px; }
       .section-top, .contact-grid { flex-direction: column; align-items: start; }
@@ -164,18 +165,7 @@
   </header>
 
   <main id="main">
-    <section class="hero" aria-labelledby="hero-title">
-      <svg class="contours" viewBox="0 0 800 800" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid slice">
-        <g fill="none" stroke="#a2c3a7" stroke-width="1.5">
-          <path d="M-150 90 C110 -30 230 70 320 150 S590 250 900 70"/><path d="M-150 130 C90 10 220 110 305 190 S600 290 900 110"/>
-          <path d="M-150 170 C90 50 200 150 310 230 S600 330 900 150"/><path d="M-150 210 C90 90 200 190 310 270 S600 370 900 190"/>
-          <path d="M-150 250 C90 130 200 230 310 310 S600 410 900 230"/><path d="M-150 290 C90 170 200 270 310 350 S600 450 900 270"/>
-          <path d="M-150 330 C90 210 200 310 310 390 S600 490 900 310"/><path d="M-150 370 C90 250 200 350 310 430 S600 530 900 350"/>
-          <path d="M-150 410 C90 290 200 390 310 470 S600 570 900 390"/><path d="M-150 450 C90 330 200 430 310 510 S600 610 900 430"/>
-          <path d="M-150 490 C90 370 200 470 310 550 S600 650 900 470"/><path d="M-150 530 C90 410 200 510 310 590 S600 690 900 510"/>
-          <path d="M-150 570 C90 450 200 550 310 630 S600 730 900 550"/><path d="M-150 610 C90 490 200 590 310 670 S600 770 900 590"/>
-        </g>
-      </svg>
+    <section class="hero" aria-label="Topographic artwork of Mount Ossa and Lake Macfarlane, Tasmania" aria-labelledby="hero-title">
       <div class="shell hero-grid">
         <div class="reveal">
           <p class="eyebrow">GIS · Remote sensing · RPA mapping</p>
@@ -185,10 +175,6 @@
             <a class="button" href="#work">Explore my projects <span aria-hidden="true">↗</span></a>
             <a class="text-link" href="about.html">A little about me</a>
           </div>
-        </div>
-        <div class="hero-photo reveal">
-          <img src="callum-outdoors.jpg" alt="Callum exploring a forest waterfall" fetchpriority="high">
-          <span class="photo-note">Curiosity beyond the map</span>
         </div>
       </div>
       <a class="scroll-hint" href="#work">Scroll to explore ↓</a>
