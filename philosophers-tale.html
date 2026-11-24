@@ -2,316 +2,227 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14231f">
+  <meta name="description" content="A GIS-based comparison of access and cost priorities for wilderness hut site selection along the Philosopher's Tale Track in Tasmania.">
   <title>Philosopher's Tale | Callum Macfarlane</title>
-
   <style>
-    * { box-sizing: border-box; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: #202527;
-      color: #f5f5f5;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      line-height: 1.7;
+    :root { color-scheme: dark; --bg:#14231f; --surface:#1b2d27; --surface-2:#253b32; --text:#f0f1e9; --muted:#b7c8bd; --accent:#b9d9b2; --line:rgba(217,235,217,.17); --max:1200px; }
+    * {box-sizing:border-box}
+    html {scroll-behavior:smooth;scroll-padding-top:100px}
+    body {margin:0;background:var(--bg);color:var(--text);font-family:"Segoe UI",Arial,sans-serif;line-height:1.7}
+    body::before {content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 85% 2%,rgba(115,153,125,.11),transparent 45%)}
+    a {color:inherit}
+    a:focus-visible,button:focus-visible {outline:3px solid var(--accent);outline-offset:5px}
+    img {max-width:100%;display:block}
+    .shell {width:min(var(--max),calc(100% - 48px));margin-inline:auto}
+    .skip-link {position:absolute;top:-60px;left:15px;z-index:30;padding:10px 15px;background:var(--text);color:var(--bg)}
+    .skip-link:focus {top:12px}
+    .site-header {position:sticky;top:0;z-index:20;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);background:rgba(20,35,31,.90);border-bottom:1px solid var(--line)}
+    .header-inner {min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .brand {display:flex;align-items:center;gap:13px;text-decoration:none}
+    .monogram {display:grid;place-items:center;flex:none;width:42px;height:42px;border:1px solid rgba(185,217,178,.55);border-radius:50%;color:var(--accent);font:600 14px Georgia,serif;letter-spacing:-1px}
+    .brand-text {display:flex;flex-direction:column;line-height:1.3}
+    .brand-text strong {font-size:15px;font-weight:600}
+    .brand-text small {font-size:11px;color:var(--muted);letter-spacing:.07em}
+    .nav {display:flex;gap:clamp(16px,3vw,34px);align-items:center}
+    .nav a {color:var(--muted);text-decoration:none;font-size:14px;transition:color .25s ease}
+    .nav a:hover {color:var(--accent)}
+    .nav .contact-link {border:1px solid rgba(185,217,178,.5);border-radius:30px;padding:9px 17px;color:var(--text)}
+    .nav .contact-link:hover {background:var(--accent);color:var(--bg)}
+    .eyebrow {color:var(--accent);text-transform:uppercase;font-size:12px;font-weight:600;letter-spacing:.2em}
+    .page-hero {position:relative;isolation:isolate;overflow:hidden;border-bottom:1px solid var(--line);padding-block:100px 105px;background:#172320}
+    /* Project banner uses the actual access suitability map, softened behind the title. */
+    .page-hero::before {content:"";position:absolute;inset:-20px;z-index:-2;background:url("philosophers-access.png") center 40% / cover no-repeat;filter:blur(14px) saturate(.72);opacity:.30;transform:scale(1.03)}
+    .page-hero::after {content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(14,25,22,.99) 0%,rgba(14,25,22,.95) 41%,rgba(14,25,22,.67) 100%)}
+    .page-hero h1 {font:400 clamp(43px,6vw,76px)/1.1 Georgia,"Times New Roman",serif;letter-spacing:-.045em;max-width:800px;text-wrap:balance;margin:21px 0 22px}
+    .page-hero p {color:#d2ddd3;max-width:680px;font-size:clamp(16px,1.7vw,19px);margin:0}
+    .breadcrumb {color:var(--muted);font-size:13px;text-decoration:none;border-bottom:1px solid rgba(185,217,178,.4);padding-bottom:4px;display:inline-block;margin-bottom:34px}
+    .breadcrumb:hover {color:var(--accent)}
+    .location {margin-top:24px;color:var(--accent);font-size:13px;letter-spacing:.04em}
+    .intro {max-width:850px;padding-block:80px 34px}
+    .section-label {display:block;margin-bottom:16px}
+    .intro p,.analysis-copy p,.closing-copy p {font-size:17px;color:#d5dfd6;max-width:800px;margin:0 0 22px}
+    .section-heading {font:400 clamp(33px,4.3vw,52px)/1.13 Georgia,serif;letter-spacing:-.03em;margin:0 0 22px}
+    .results {padding-block:42px 85px}
+    .result-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:30px}
+    .result-card {background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:29px 30px;min-height:170px}
+    .result-card strong {display:block;color:var(--accent);font:400 clamp(34px,4.2vw,54px)/1.1 Georgia,serif;letter-spacing:-.03em;margin-bottom:16px}
+    .result-card span {color:var(--muted);font-size:14px}
+    .result-card .result-tag {display:block;color:var(--accent);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.16em;margin-bottom:13px}
+    .result-card .result-note {margin:16px 0 0;color:#d5dfd6;font-size:14px;line-height:1.65}
+    .result-note b {color:var(--text);font-weight:600}
+    .map-section {padding-block:95px;background:var(--surface);border-block:1px solid var(--line)}
+    .section-top {display:flex;align-items:end;justify-content:space-between;gap:26px;margin-bottom:38px}
+    .section-top p {color:var(--muted);max-width:340px;margin:0;font-size:14px}
+    .map-gallery {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px}
+    figure {margin:0;min-width:0}
+    .map-frame {display:block;overflow:hidden;background:#24352e;border:1px solid var(--line);border-radius:5px;text-decoration:none}
+    .map-frame img {width:100%;height:auto;transition:transform .55s cubic-bezier(.22,1,.36,1),filter .4s ease}
+    .map-frame:hover img,.map-frame:focus-visible img {transform:scale(1.025);filter:brightness(.95)}
+    figcaption {padding-top:16px;color:var(--muted);font-size:14px}
+    figcaption strong {display:block;font:400 24px/1.25 Georgia,serif;color:var(--text);margin-bottom:7px}
+    .analysis {padding-block:95px 105px}
+    .analysis-layout {display:grid;grid-template-columns:minmax(0,1.1fr) minmax(260px,.7fr);gap:clamp(35px,7vw,110px);align-items:start}
+    .analysis-copy {max-width:750px}
+    .project-details {background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:26px}
+    .project-details h3 {font:400 25px Georgia,serif;margin:0 0 22px}
+    .project-details dl {margin:0}
+    .project-details dt {font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--accent);margin:20px 0 6px}
+    .project-details dt:first-child {margin-top:0}
+    .project-details dd {margin:0;font-size:14px;color:var(--muted)}
+    .back-link {display:inline-block;margin-top:30px;color:var(--accent);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:4px;font-size:14px}
+    .back-link:hover {color:#d0ebc9}
+    footer {border-top:1px solid var(--line);padding-block:25px;color:var(--muted);font-size:12px}
+    .footer-inner {display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+    .js-reveal .reveal {opacity:0;transform:translateY(22px);transition:opacity .75s ease,transform .75s cubic-bezier(.2,.75,.25,1)}
+    .js-reveal .reveal.is-visible {opacity:1;transform:none}
+    @view-transition {navigation:auto}
+    ::view-transition-old(root) {animation:.18s ease-out both fade-away}
+    ::view-transition-new(root) {animation:.28s ease-in both fade-enter}
+    @keyframes fade-away {to {opacity:0}}
+    @keyframes fade-enter {from {opacity:0}}
+    @media (max-width:800px) {
+      .analysis-layout {grid-template-columns:1fr}
+      .section-top {align-items:start;flex-direction:column}
     }
-
-    header {
-      padding: 18px 28px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 20px;
+    @media (max-width:620px) {
+      .shell {width:min(var(--max),calc(100% - 32px))}
+      .header-inner {min-height:70px;flex-wrap:wrap;padding-block:12px}
+      .brand-text small {display:none}
+      .nav {width:100%;justify-content:space-between;gap:12px}
+      .nav a {font-size:13px}
+      .nav .contact-link {padding:5px 12px}
+      .page-hero {padding-block:62px 75px}
+      .intro {padding-block:55px 24px}
+      .results {padding-bottom:65px}
+      .result-grid,.map-gallery {grid-template-columns:1fr}
+      .map-section,.analysis {padding-block:65px}
+      .result-card {min-height:auto}
     }
-
-    .site-name {
-      font-size: 17px;
-      font-weight: bold;
-    }
-
-    .subtitle {
-      font-size: 13px;
-      color: #d0d5d5;
-    }
-
-    nav {
-      display: flex;
-      gap: 28px;
-      flex-wrap: wrap;
-    }
-
-    nav a, .site-name a {
-      color: white;
-      text-decoration: none;
-    }
-
-    nav a:hover {
-      color: #a4c9bf;
-    }
-
-    a { color: #a4c9bf; }
-
-    main {
-      max-width: 1000px;
-      margin: 70px auto;
-      padding: 0 24px;
-    }
-
-    .intro, .results, .details {
-      max-width: 760px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    h1, h2 { font-weight: normal; }
-
-    h1 {
-      font-size: 32px;
-      line-height: 1.3;
-    }
-
-    h2 { margin-top: 45px; }
-
-    .category {
-      color: #a4c9bf;
-      font-size: 13px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .map-gallery {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 24px;
-      margin: 35px 0;
-    }
-
-    figure { margin: 0; }
-
-    figure img {
-      display: block;
-      width: 100%;
-      height: auto;
-      border-radius: 3px;
-    }
-
-    figure a img:hover {
-      opacity: 0.9;
-    }
-
-    figcaption {
-      color: #c3cccc;
-      font-size: 13px;
-      margin-top: 10px;
-    }
-
-    .details {
-      border-top: 1px solid #465052;
-      margin-top: 40px;
-      padding-top: 20px;
-    }
-
-    footer {
-      text-align: center;
-      padding: 35px;
-      color: #aeb9b9;
-      font-size: 13px;
-    }
-
-    @media (max-width: 650px) {
-      header {
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      nav { gap: 20px; }
-
-      main { margin: 40px auto; }
-
-      .map-gallery {
-        grid-template-columns: 1fr;
-      }
+    @media (prefers-reduced-motion:reduce) {
+      html {scroll-behavior:auto}
+      *,*::before,*::after {animation-duration:.01ms !important;transition-duration:.01ms !important}
+      .js-reveal .reveal {opacity:1 !important;transform:none !important}
     }
   </style>
 </head>
-
 <body>
-
-  <header>
-    <div>
-      <div class="site-name">
-        <a href="index.html">Callum Macfarlane</a>
-      </div>
-      <div class="subtitle">
-        GIS | Remote Sensing | RPA Mapping
-      </div>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="index.html" aria-label="Callum Macfarlane, homepage">
+        <span class="monogram" aria-hidden="true">CM</span>
+        <span class="brand-text"><strong>Callum Macfarlane</strong><small>GEOSPATIAL PORTFOLIO</small></span>
+      </a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html#work">Projects</a>
+        <a href="about.html">About me</a>
+        <a class="contact-link" href="index.html#contact">Get in touch ↗</a>
+      </nav>
     </div>
-
-    <nav>
-      <a href="about.html">About Me</a>
-      <a href="index.html">Portfolio</a>
-      <a href="index.html#contact">Contact</a>
-    </nav>
   </header>
 
-  <main>
+  <main id="main">
+    <section class="page-hero" aria-labelledby="page-title">
+      <div class="shell reveal">
+        <a class="breadcrumb" href="index.html#work">← Back to projects</a>
+        <div class="eyebrow">Spatial analysis · Environmental planning</div>
+        <h1 id="page-title">Multi-Criteria Hut Site Suitability Analysis</h1>
+        <p>This project investigated potential locations for a new wilderness hut along the Philosopher's Tale Track in Tasmania, considering competing priorities of accessibility, construction costs and landscape characteristics.</p>
+        <div class="location">Philosopher's Tale Track, Tasmania · 2026</div>
+      </div>
+    </section>
 
-    <div class="intro">
+    <section class="intro shell reveal" aria-labelledby="approach-title">
+      <span class="eyebrow section-label">01 / Approach</span>
+      <h2 class="section-heading" id="approach-title">One landscape, two priorities.</h2>
+      <p>Using GIS-based suitability analysis, I evaluated potential hut locations against environmental and infrastructure constraints, including terrain, proximity to existing tracks and roads, water features and threatened vegetation.</p>
+      <p>Two different perspectives were explored: an access-focused approach prioritising convenient locations, and a cost-focused approach considering the practical implications of site selection.</p>
+      <p>Additional viewshed analysis was used to investigate landscape visibility from selected potential hut sites.</p>
+    </section>
 
-      <p class="category">
-        Spatial Analysis | Environmental Planning
-      </p>
+    <section class="results shell" aria-labelledby="results-title">
+      <div class="reveal">
+        <span class="eyebrow section-label">02 / Site comparison</span>
+        <h2 class="section-heading" id="results-title">Different priorities, different sites.</h2>
+      </div>
+      <div class="result-grid">
+        <div class="result-card reveal">
+          <span class="result-tag">Access perspective</span>
+          <strong>7,500 m²</strong>
+          <span>Approximate preferred site area</span>
+          <p class="result-note">Ranked <b>1st for access</b> and 25th for cost suitability.</p>
+        </div>
+        <div class="result-card reveal">
+          <span class="result-tag">Cost perspective</span>
+          <strong>1,025 m²</strong>
+          <span>Approximate preferred site area</span>
+          <p class="result-note">Ranked <b>1st for cost</b> and 2nd for access suitability; approximate mapped viewshed of <b>24.41 km²</b>.</p>
+        </div>
+      </div>
+    </section>
 
-      <h1>
-        Multi-Criteria Hut Site Suitability Analysis
-      </h1>
+    <section class="map-section" aria-labelledby="maps-title">
+      <div class="shell">
+        <div class="section-top reveal">
+          <div><span class="eyebrow section-label">03 / Cartography</span><h2 class="section-heading" id="maps-title">Project maps.</h2></div>
+          <p>Two suitability perspectives across the same track corridor. Select a map to view the full-resolution image.</p>
+        </div>
+        <div class="map-gallery">
+          <figure class="reveal">
+            <a class="map-frame" href="philosophers-access.png" target="_blank" rel="noopener noreferrer" aria-label="Open access-focused hut suitability map at full resolution">
+              <img src="philosophers-access.png" alt="Access-focused hut site suitability map along the Philosopher's Tale Track" loading="lazy">
+            </a>
+            <figcaption><strong>Access perspective</strong>Preferred hut locations prioritising accessibility along the track.</figcaption>
+          </figure>
+          <figure class="reveal">
+            <a class="map-frame" href="philosophers-cost.png" target="_blank" rel="noopener noreferrer" aria-label="Open cost-focused hut suitability map at full resolution">
+              <img src="philosophers-cost.png" alt="Cost-focused hut site suitability map including viewshed considerations" loading="lazy">
+            </a>
+            <figcaption><strong>Cost perspective</strong>Preferred locations based on cost suitability, including viewshed considerations.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
 
-      <p>
-        <strong>
-          Philosopher's Tale Track, Tasmania | 2026
-        </strong>
-      </p>
-
-      <p>
-        This project investigated potential locations
-        for a new wilderness hut along the Philosopher's
-        Tale Track in Tasmania, considering competing
-        priorities of accessibility, construction costs
-        and landscape characteristics.
-      </p>
-
-      <p>
-        Using GIS-based suitability analysis, I evaluated
-        potential hut locations against environmental
-        and infrastructure constraints, including terrain,
-        proximity to existing tracks and roads, water
-        features and threatened vegetation.
-      </p>
-
-      <p>
-        Two different perspectives were explored:
-        an access-focused approach prioritising
-        convenient locations, and a cost-focused approach
-        considering the practical implications of site
-        selection.
-      </p>
-
-      <p>
-        Additional viewshed analysis was used to
-        investigate landscape visibility from selected
-        potential hut sites.
-      </p>
-
-    </div>
-
-    <div class="intro">
-      <h2>Project Maps</h2>
-      <p>
-        Click either map to view it at full resolution.
-      </p>
-    </div>
-
-    <div class="map-gallery">
-
-      <figure>
-        <a href="philosophers-access.png" target="_blank">
-          <img
-            src="philosophers-access.png"
-            alt="Access-focused hut site suitability map"
-            loading="lazy">
-        </a>
-        <figcaption>
-          <strong>Access Perspective.</strong>
-          Preferred hut locations prioritising
-          accessibility along the track.
-        </figcaption>
-      </figure>
-
-      <figure>
-        <a href="philosophers-cost.png" target="_blank">
-          <img
-            src="philosophers-cost.png"
-            alt="Cost-focused hut site suitability map"
-            loading="lazy">
-        </a>
-        <figcaption>
-          <strong>Cost Perspective.</strong>
-          Preferred locations based on cost suitability,
-          including viewshed considerations.
-        </figcaption>
-      </figure>
-
-    </div>
-
-    <div class="results">
-
-      <h2>Results & Findings</h2>
-
-      <p>
-        The two suitability approaches identified
-        different preferred hut sites, demonstrating
-        how the weighting of decision-making criteria
-        can influence spatial planning outcomes.
-      </p>
-
-      <p>
-        The access-focused approach identified a preferred
-        site of approximately <strong>7,500 m²</strong>,
-        ranked first for accessibility but 25th for
-        cost suitability.
-      </p>
-
-      <p>
-        In comparison, the cost-focused approach identified
-        a preferred site of approximately
-        <strong>1,025 m²</strong>, ranked first for cost
-        suitability and second for accessibility.
-        This site also had an approximate mapped
-        viewshed area of <strong>24.41 km²</strong>.
-      </p>
-
-      <p>
-        The comparison highlights the importance of
-        considering competing priorities when selecting
-        locations for infrastructure in environmentally
-        sensitive landscapes.
-      </p>
-
-    </div>
-
-    <div class="details">
-
-      <p>
-        <strong>Techniques:</strong>
-        Multi-criteria suitability analysis,
-        spatial overlay, terrain analysis,
-        viewshed modelling and site ranking.
-      </p>
-
-      <p>
-        <strong>Software:</strong> ArcGIS Pro.
-      </p>
-
-      <p>
-        <strong>Project context:</strong>
-        Academic project completed as part of
-        postgraduate GIS studies at the
-        University of Tasmania, 2026.
-      </p>
-
-      <p>
-        <a href="index.html">← Back to Portfolio</a>
-      </p>
-
-    </div>
-
+    <section class="analysis shell" aria-labelledby="meaning-title">
+      <div class="analysis-layout">
+        <div class="analysis-copy reveal">
+          <span class="eyebrow section-label">04 / Findings</span>
+          <h2 class="section-heading" id="meaning-title">What the comparison showed.</h2>
+          <p>The two suitability approaches identified different preferred hut sites, demonstrating how the weighting of decision-making criteria can influence spatial planning outcomes.</p>
+          <p>The access-focused approach identified a preferred site of approximately <strong>7,500 m²</strong>, ranked first for accessibility but 25th for cost suitability.</p>
+          <p>In comparison, the cost-focused approach identified a preferred site of approximately <strong>1,025 m²</strong>, ranked first for cost suitability and second for accessibility. This site also had an approximate mapped viewshed area of <strong>24.41 km²</strong>.</p>
+          <p>The comparison highlights the importance of considering competing priorities when selecting locations for infrastructure in environmentally sensitive landscapes.</p>
+          <a class="back-link" href="index.html#work">← Back to projects</a>
+        </div>
+        <aside class="project-details reveal" aria-labelledby="details-title">
+          <h3 id="details-title">Project details</h3>
+          <dl>
+            <dt>Techniques</dt><dd>Multi-criteria suitability analysis, spatial overlay, terrain analysis, viewshed modelling and site ranking.</dd>
+            <dt>Software</dt><dd>ArcGIS Pro.</dd>
+            <dt>Project context</dt><dd>Academic project completed as part of postgraduate GIS studies at the University of Tasmania, 2026.</dd>
+          </dl>
+        </aside>
+      </div>
+    </section>
   </main>
 
-  <footer>
-    © 2026 Callum Macfarlane
-  </footer>
-
+  <footer><div class="shell footer-inner"><span>© 2026 Callum Macfarlane</span><span>Based in Launceston, Tasmania</span></div></footer>
+  <script>
+    if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('js-reveal');
+      const observer = new IntersectionObserver((entries, obs) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            obs.unobserve(entry.target);
+          }
+        }
+      }, {threshold:.08,rootMargin:'0px 0px -24px 0px'});
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    }
+  </script>
 </body>
 </html>

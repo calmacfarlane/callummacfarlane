@@ -1,339 +1,236 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14231f">
+  <meta name="description" content="RPA photogrammetry accuracy assessment comparing conventional GPS and RTK using 18 surveyed checkpoints at the University of Tasmania.">
   <title>RPA Photogrammetry | Callum Macfarlane</title>
-
   <style>
-    * { box-sizing: border-box; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      margin: 0;
-      background: #202527;
-      color: #f5f5f5;
-      font-family: Arial, sans-serif;
-      line-height: 1.7;
+    :root { color-scheme: dark; --bg:#14231f; --surface:#1b2d27; --surface-2:#253b32; --text:#f0f1e9; --muted:#b7c8bd; --accent:#b9d9b2; --line:rgba(217,235,217,.17); --max:1200px; }
+    * {box-sizing:border-box}
+    html {scroll-behavior:smooth;scroll-padding-top:100px}
+    body {margin:0;background:var(--bg);color:var(--text);font-family:"Segoe UI",Arial,sans-serif;line-height:1.7}
+    body::before {content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 85% 2%,rgba(115,153,125,.11),transparent 45%)}
+    a {color:inherit}
+    a:focus-visible,button:focus-visible {outline:3px solid var(--accent);outline-offset:5px}
+    img {max-width:100%;display:block}
+    .shell {width:min(var(--max),calc(100% - 48px));margin-inline:auto}
+    .skip-link {position:absolute;top:-60px;left:15px;z-index:30;padding:10px 15px;background:var(--text);color:var(--bg)}
+    .skip-link:focus {top:12px}
+    .site-header {position:sticky;top:0;z-index:20;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);background:rgba(20,35,31,.90);border-bottom:1px solid var(--line)}
+    .header-inner {min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .brand {display:flex;align-items:center;gap:13px;text-decoration:none}
+    .monogram {display:grid;place-items:center;flex:none;width:42px;height:42px;border:1px solid rgba(185,217,178,.55);border-radius:50%;color:var(--accent);font:600 14px Georgia,serif;letter-spacing:-1px}
+    .brand-text {display:flex;flex-direction:column;line-height:1.3}
+    .brand-text strong {font-size:15px;font-weight:600}
+    .brand-text small {font-size:11px;color:var(--muted);letter-spacing:.07em}
+    .nav {display:flex;gap:clamp(16px,3vw,34px);align-items:center}
+    .nav a {color:var(--muted);text-decoration:none;font-size:14px;transition:color .25s ease}
+    .nav a:hover {color:var(--accent)}
+    .nav .contact-link {border:1px solid rgba(185,217,178,.5);border-radius:30px;padding:9px 17px;color:var(--text)}
+    .nav .contact-link:hover {background:var(--accent);color:var(--bg)}
+    .eyebrow {color:var(--accent);text-transform:uppercase;font-size:12px;font-weight:600;letter-spacing:.2em}
+    .page-hero {position:relative;isolation:isolate;overflow:hidden;border-bottom:1px solid var(--line);padding-block:100px 105px;background:#172320}
+    /* Header uses the actual RPA error map, softened behind the title. */
+    .page-hero::before {content:"";position:absolute;inset:-20px;z-index:-2;background:url("rpa-accuracy.png") center 40% / cover no-repeat;filter:blur(14px) saturate(.72);opacity:.30;transform:scale(1.03)}
+    .page-hero::after {content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(14,25,22,.99) 0%,rgba(14,25,22,.95) 41%,rgba(14,25,22,.67) 100%)}
+    .page-hero h1 {font:400 clamp(43px,6vw,76px)/1.1 Georgia,"Times New Roman",serif;letter-spacing:-.045em;max-width:800px;text-wrap:balance;margin:21px 0 22px}
+    .page-hero p {color:#d2ddd3;max-width:680px;font-size:clamp(16px,1.7vw,19px);margin:0}
+    .breadcrumb {color:var(--muted);font-size:13px;text-decoration:none;border-bottom:1px solid rgba(185,217,178,.4);padding-bottom:4px;display:inline-block;margin-bottom:34px}
+    .breadcrumb:hover {color:var(--accent)}
+    .location {margin-top:24px;color:var(--accent);font-size:13px;letter-spacing:.04em}
+    .intro {max-width:850px;padding-block:80px 34px}
+    .section-label {display:block;margin-bottom:16px}
+    .intro p,.analysis-copy p,.closing-copy p {font-size:17px;color:#d5dfd6;max-width:800px;margin:0 0 22px}
+    .section-heading {font:400 clamp(33px,4.3vw,52px)/1.13 Georgia,serif;letter-spacing:-.03em;margin:0 0 22px}
+    .results {padding-block:42px 85px}
+    .result-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:30px}
+    .result-card {background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:29px 30px;min-height:170px}
+    .result-card strong {display:block;color:var(--accent);font:400 clamp(34px,4.2vw,54px)/1.1 Georgia,serif;letter-spacing:-.03em;margin-bottom:16px}
+    .result-card span {color:var(--muted);font-size:14px}
+    .result-card .result-tag {display:block;color:var(--accent);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.16em;margin-bottom:13px}
+    .result-card .result-note {margin:16px 0 0;color:#d5dfd6;font-size:14px;line-height:1.65}
+    .result-note b {color:var(--text);font-weight:600}
+    .map-section {padding-block:95px;background:var(--surface);border-block:1px solid var(--line)}
+    .section-top {display:flex;align-items:end;justify-content:space-between;gap:26px;margin-bottom:38px}
+    .section-top p {color:var(--muted);max-width:340px;margin:0;font-size:14px}
+    .map-gallery {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px}
+    figure {margin:0;min-width:0}
+    .map-frame {display:block;overflow:hidden;background:#24352e;border:1px solid var(--line);border-radius:5px;text-decoration:none}
+    .map-frame img {width:100%;height:auto;transition:transform .55s cubic-bezier(.22,1,.36,1),filter .4s ease}
+    .map-frame:hover img,.map-frame:focus-visible img {transform:scale(1.025);filter:brightness(.95)}
+    figcaption {padding-top:16px;color:var(--muted);font-size:14px}
+    figcaption strong {display:block;font:400 24px/1.25 Georgia,serif;color:var(--text);margin-bottom:7px}
+    .analysis {padding-block:95px 105px}
+    .analysis-layout {display:grid;grid-template-columns:minmax(0,1.1fr) minmax(260px,.7fr);gap:clamp(35px,7vw,110px);align-items:start}
+    .analysis-copy {max-width:750px}
+    .project-details {background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:26px}
+    .project-details h3 {font:400 25px Georgia,serif;margin:0 0 22px}
+    .project-details dl {margin:0}
+    .project-details dt {font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--accent);margin:20px 0 6px}
+    .project-details dt:first-child {margin-top:0}
+    .project-details dd {margin:0;font-size:14px;color:var(--muted)}
+    .back-link {display:inline-block;margin-top:30px;color:var(--accent);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:4px;font-size:14px}
+    .back-link:hover {color:#d0ebc9}
+    footer {border-top:1px solid var(--line);padding-block:25px;color:var(--muted);font-size:12px}
+    .footer-inner {display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+    .js-reveal .reveal {opacity:0;transform:translateY(22px);transition:opacity .75s ease,transform .75s cubic-bezier(.2,.75,.25,1)}
+    .js-reveal .reveal.is-visible {opacity:1;transform:none}
+    @view-transition {navigation:auto}
+    ::view-transition-old(root) {animation:.18s ease-out both fade-away}
+    ::view-transition-new(root) {animation:.28s ease-in both fade-enter}
+    @keyframes fade-away {to {opacity:0}}
+    @keyframes fade-enter {from {opacity:0}}
+    @media (max-width:800px) {
+      .analysis-layout {grid-template-columns:1fr}
+      .section-top {align-items:start;flex-direction:column}
     }
-
-    header {
-      padding: 18px 28px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 20px;
+    @media (max-width:620px) {
+      .shell {width:min(var(--max),calc(100% - 32px))}
+      .header-inner {min-height:70px;flex-wrap:wrap;padding-block:12px}
+      .brand-text small {display:none}
+      .nav {width:100%;justify-content:space-between;gap:12px}
+      .nav a {font-size:13px}
+      .nav .contact-link {padding:5px 12px}
+      .page-hero {padding-block:62px 75px}
+      .intro {padding-block:55px 24px}
+      .results {padding-bottom:65px}
+      .result-grid,.map-gallery {grid-template-columns:1fr}
+      .map-section,.analysis {padding-block:65px}
+      .result-card {min-height:auto}
     }
-
-    .site-name {
-      font-size: 17px;
-      font-weight: bold;
+    @media (prefers-reduced-motion:reduce) {
+      html {scroll-behavior:auto}
+      *,*::before,*::after {animation-duration:.01ms !important;transition-duration:.01ms !important}
+      .js-reveal .reveal {opacity:1 !important;transform:none !important}
     }
-
-    .subtitle {
-      font-size: 13px;
-      color: #d0d5d5;
-    }
-
-    nav {
-      display: flex;
-      gap: 28px;
-      flex-wrap: wrap;
-    }
-
-    a { color: #a4c9bf; }
-
-    nav a, .site-name a {
-      color: white;
-      text-decoration: none;
-    }
-
-    nav a:hover { color: #a4c9bf; }
-
-    main {
-      max-width: 1050px;
-      margin: 70px auto;
-      padding: 0 24px;
-    }
-
-    .content {
-      max-width: 760px;
-      margin: 0 auto;
-    }
-
-    h1, h2 { font-weight: normal; }
-
-    h1 {
-      font-size: 32px;
-      line-height: 1.3;
-    }
-
-    h2 { margin-top: 45px; }
-
-    .category {
-      color: #a4c9bf;
-      font-size: 13px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .results-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin: 30px 0;
-    }
-
-    .result-card {
-      background: #2c3436;
-      padding: 24px;
-      border-radius: 5px;
-    }
-
-    .result-label {
-      color: #cad4d2;
-      font-size: 13px;
-    }
-
-    .result-value {
-      display: block;
-      font-size: 32px;
-      font-weight: bold;
-      margin-top: 8px;
-    }
-
-    .map {
-      margin: 35px auto;
-      text-align: center;
-    }
-
-    .map img {
-      display: block;
-      width: 100%;
-      height: auto;
-      border-radius: 3px;
-    }
-
-    .map img:hover { opacity: 0.95; }
-
-    figcaption {
-      color: #c3cccc;
-      font-size: 13px;
-      margin-top: 12px;
-    }
-
-    .details {
-      border-top: 1px solid #465052;
-      margin-top: 40px;
-      padding-top: 20px;
-    }
-
-    footer {
-      text-align: center;
-      padding: 35px;
-      color: #aeb9b9;
-      font-size: 13px;
-    }
-
-    @media (max-width: 650px) {
-      header {
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      nav { gap: 20px; }
-
-      main { margin: 40px auto; }
-
-      .results-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+  
+    .accuracy-section {padding-block:95px;background:var(--surface);border-block:1px solid var(--line)}
+    .accuracy-frame {display:block;background:#24352e;border:1px solid var(--line);border-radius:5px;overflow:hidden;text-decoration:none}
+    .accuracy-frame img {display:block;width:100%;height:auto;transition:filter .35s ease,transform .55s cubic-bezier(.22,1,.36,1)}
+    .accuracy-frame:hover img,.accuracy-frame:focus-visible img {filter:brightness(.96);transform:scale(1.01)}
+    .accuracy-caption {padding-top:17px;color:var(--muted);font-size:14px;max-width:880px}
+    .note {color:var(--muted);font-size:14px;margin-top:20px}
+    .methods {padding-block:90px 100px}
+    .methods-layout {display:grid;grid-template-columns:minmax(0,1.1fr) minmax(260px,.7fr);gap:clamp(35px,7vw,110px);align-items:start}
+    .methods-copy p {font-size:17px;color:#d5dfd6;max-width:800px;margin:0 0 22px}
+    .methods-copy h3 {font:400 28px Georgia,serif;margin:38px 0 16px}
+    @media (max-width:800px) {.methods-layout {grid-template-columns:1fr}}
+    @media (max-width:620px) {.accuracy-section,.methods {padding-block:65px}}
   </style>
 </head>
-
 <body>
-
-  <header>
-    <div>
-      <div class="site-name">
-        <a href="index.html">Callum Macfarlane</a>
-      </div>
-      <div class="subtitle">
-        GIS | Remote Sensing | RPA Mapping
-      </div>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="index.html" aria-label="Callum Macfarlane, homepage">
+        <span class="monogram" aria-hidden="true">CM</span>
+        <span class="brand-text"><strong>Callum Macfarlane</strong><small>GEOSPATIAL PORTFOLIO</small></span>
+      </a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html#work">Projects</a>
+        <a href="about.html">About me</a>
+        <a class="contact-link" href="index.html#contact">Get in touch ↗</a>
+      </nav>
     </div>
-
-    <nav>
-      <a href="about.html">About Me</a>
-      <a href="index.html">Portfolio</a>
-      <a href="index.html#contact">Contact</a>
-    </nav>
   </header>
 
-  <main>
-
-    <div class="content">
-
-      <p class="category">
-        RPA Photogrammetry | Spatial Accuracy
-      </p>
-
-      <h1>
-        Assessing Positional Accuracy in
-        RPA Photogrammetry
-      </h1>
-
-      <p>
-        <strong>University of Tasmania | 2026</strong>
-      </p>
-
-      <p>
-        This project investigated the positional accuracy
-        of photogrammetric mapping produced using conventional
-        GPS and Real-Time Kinematic (RTK) positioning.
-      </p>
-
-      <p>
-        Using RPA-derived orthomosaics and digital elevation
-        models, I compared the horizontal and vertical
-        accuracy of both approaches against 18 independently
-        surveyed checkpoints.
-      </p>
-
-      <p>
-        The analysis examined how different positioning
-        methods affected the accuracy of photogrammetric
-        mapping products, and how positional errors could
-        be communicated through cartographic visualisation.
-      </p>
-
-      <h2>Key Results</h2>
-
-      <div class="results-grid">
-
-        <div class="result-card">
-          <span class="result-label">
-            Conventional GPS | 3D RMSE
-          </span>
-          <span class="result-value">0.610 m</span>
-        </div>
-
-        <div class="result-card">
-          <span class="result-label">
-            RTK | 3D RMSE
-          </span>
-          <span class="result-value">0.096 m</span>
-        </div>
-
+  <main id="main">
+    <section class="page-hero" aria-labelledby="page-title">
+      <div class="shell reveal">
+        <a class="breadcrumb" href="index.html#work">← Back to projects</a>
+        <div class="eyebrow">RPA photogrammetry · Spatial accuracy</div>
+        <h1 id="page-title">Assessing Positional Accuracy in RPA Photogrammetry</h1>
+        <p>This project investigated the positional accuracy of photogrammetric mapping produced using conventional GPS and Real-Time Kinematic (RTK) positioning.</p>
+        <div class="location">University of Tasmania · 2026</div>
       </div>
+    </section>
 
-      <p>
-        The RTK-based dataset demonstrated an approximately
-        <strong>84% reduction in total 3D RMSE</strong>
-        compared with the conventional GPS dataset.
-      </p>
+    <section class="intro shell reveal" aria-labelledby="approach-title">
+      <span class="eyebrow section-label">01 / Approach</span>
+      <h2 class="section-heading" id="approach-title">Comparing two positioning methods.</h2>
+      <p>Using RPA-derived orthomosaics and digital elevation models, I compared the horizontal and vertical accuracy of both approaches against 18 independently surveyed checkpoints.</p>
+      <p>The analysis examined how different positioning methods affected the accuracy of photogrammetric mapping products, and how positional errors could be communicated through cartographic visualisation.</p>
+    </section>
 
-    </div>
-
-    <figure class="map">
-      <a href="rpa-accuracy.png" target="_blank"
-         rel="noopener noreferrer">
-        <img
-          src="rpa-accuracy.png"
-          alt="Comparison of GPS and RTK positional accuracy
-          across 18 surveyed checkpoints at UTAS"
-          loading="lazy">
-      </a>
-      <figcaption>
-        RPA positional accuracy map comparing horizontal
-        displacement and vertical error. Click to enlarge.
-      </figcaption>
-    </figure>
-
-    <div class="content">
-
-      <h2>Methodology</h2>
-
-      <p>
-        Two photogrammetric datasets were assessed:
-        one using conventional GPS positioning and
-        another using RTK positioning.
-      </p>
-
-      <p>
-        Positional errors were evaluated using 18
-        surveyed checkpoints distributed across
-        the study area. Differences between mapped
-        and surveyed positions were used to assess
-        horizontal and vertical accuracy.
-      </p>
-
-      <p>
-        To visualise horizontal error, displacement
-        vectors were exaggerated by a factor of 50,
-        allowing otherwise small positional differences
-        to be clearly displayed at the map scale.
-      </p>
-
-      <p>
-        Vertical errors were represented using graduated
-        circles, with separate colours for GPS and RTK.
-        This allowed differences in error magnitude
-        and distribution to be compared spatially.
-      </p>
-
-      <h2>Discussion</h2>
-
-      <p>
-        The results demonstrate the substantial
-        improvement in positional accuracy achievable
-        through RTK positioning.
-      </p>
-
-      <p>
-        The project also highlights the importance
-        of independent checkpoint validation and
-        clear cartographic communication of spatial
-        uncertainty in RPA-derived mapping products.
-      </p>
-
-      <div class="details">
-
-        <p>
-          <strong>Techniques:</strong>
-          RPA photogrammetry, GNSS positioning,
-          RTK, checkpoint validation, RMSE analysis
-          and positional error visualisation.
-        </p>
-
-        <p>
-          <strong>Software:</strong>
-          QGIS, Agisoft photogrammetric processing.
-        </p>
-
-        <p>
-          <strong>Project context:</strong>
-          Academic project completed as part of
-          postgraduate GIS studies at the
-          University of Tasmania, 2026.
-        </p>
-
-        <p>
-          <a href="index.html">← Back to Portfolio</a>
-        </p>
-
+    <section class="results shell" aria-labelledby="results-title">
+      <div class="reveal">
+        <span class="eyebrow section-label">02 / Key results</span>
+        <h2 class="section-heading" id="results-title">GPS versus RTK.</h2>
       </div>
+      <div class="result-grid">
+        <div class="result-card reveal">
+          <span class="result-tag">Conventional GPS</span>
+          <strong>0.610 m</strong>
+          <span>Total 3D RMSE</span>
+        </div>
+        <div class="result-card reveal">
+          <span class="result-tag">Real-Time Kinematic (RTK)</span>
+          <strong>0.096 m</strong>
+          <span>Total 3D RMSE</span>
+        </div>
+      </div>
+      <p class="note reveal">The RTK-based dataset demonstrated an approximately <strong>84% reduction in total 3D RMSE</strong> compared with the conventional GPS dataset.</p>
+    </section>
 
-    </div>
+    <section class="accuracy-section" aria-labelledby="map-title">
+      <div class="shell">
+        <div class="section-top reveal">
+          <div>
+            <span class="eyebrow section-label">03 / Cartography</span>
+            <h2 class="section-heading" id="map-title">Mapping positional error.</h2>
+          </div>
+          <p>Select the map to examine horizontal displacement and vertical errors at full resolution.</p>
+        </div>
+        <figure class="reveal">
+          <a class="accuracy-frame" href="rpa-accuracy.png" target="_blank" rel="noopener noreferrer" aria-label="Open full-resolution RPA positional accuracy map">
+            <img src="rpa-accuracy.png" alt="Photogrammetry accuracy map of 18 surveyed checkpoints, comparing GPS and RTK horizontal displacement vectors and vertical error circles" loading="lazy">
+          </a>
+          <figcaption class="accuracy-caption">RPA positional accuracy map comparing horizontal displacement and vertical error across 18 surveyed checkpoints. Horizontal displacement vectors are exaggerated 50 times to remain visible at the map scale.</figcaption>
+        </figure>
+      </div>
+    </section>
 
+    <section class="methods shell" aria-labelledby="methods-title">
+      <div class="methods-layout">
+        <div class="methods-copy reveal">
+          <span class="eyebrow section-label">04 / Methodology and discussion</span>
+          <h2 class="section-heading" id="methods-title">Validating the mapping.</h2>
+          <p>Two photogrammetric datasets were assessed: one using conventional GPS positioning and another using RTK positioning.</p>
+          <p>Positional errors were evaluated using 18 surveyed checkpoints distributed across the study area. Differences between mapped and surveyed positions were used to assess horizontal and vertical accuracy.</p>
+          <p>To visualise horizontal error, displacement vectors were exaggerated by a factor of 50, allowing otherwise small positional differences to be clearly displayed at the map scale.</p>
+          <p>Vertical errors were represented using graduated circles, with separate colours for GPS and RTK. This allowed differences in error magnitude and distribution to be compared spatially.</p>
+          <h3>What the results showed</h3>
+          <p>The results demonstrate the substantial improvement in positional accuracy achievable through RTK positioning.</p>
+          <p>The project also highlights the importance of independent checkpoint validation and clear cartographic communication of spatial uncertainty in RPA-derived mapping products.</p>
+          <a class="back-link" href="index.html#work">← Back to projects</a>
+        </div>
+        <aside class="project-details reveal" aria-labelledby="details-title">
+          <h3 id="details-title">Project details</h3>
+          <dl>
+            <dt>Techniques</dt><dd>RPA photogrammetry, GNSS positioning, RTK, checkpoint validation, RMSE analysis and positional error visualisation.</dd>
+            <dt>Software</dt><dd>QGIS, Agisoft photogrammetric processing.</dd>
+            <dt>Project context</dt><dd>Academic project completed as part of postgraduate GIS studies at the University of Tasmania, 2026.</dd>
+          </dl>
+        </aside>
+      </div>
+    </section>
   </main>
-
-  <footer>
-    © 2026 Callum Macfarlane
-  </footer>
-
+  <footer><div class="shell footer-inner"><span>© 2026 Callum Macfarlane</span><span>Based in Launceston, Tasmania</span></div></footer>
+  <script>
+    if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('js-reveal');
+      const observer = new IntersectionObserver((entries, obs) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            obs.unobserve(entry.target);
+          }
+        }
+      }, {threshold:.08,rootMargin:'0px 0px -24px 0px'});
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    }
+  </script>
 </body>
 </html>
